@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorandum - HR/Admin Department</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-item {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .sidebar-item:hover {
+            background-color: #444;
+        }
+
+        .sidebar-item.active {
+            background-color: #e31837;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+            position: relative;
+            background: #f5f5f5;
+        }
+
+        .navigation-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 50;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-button {
+            background: #e31837;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: inline-block;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .header-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .header-title h1 {
+            color: #e31837;
+            font-size: 36px;
+            margin: 0;
+        }
+
+        .content-area {
+            padding: 40px;
+            position: relative;
+            z-index: 20;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #000;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background-color: #e31837;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 40px auto 20px;
+            padding: 0 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-button {
+            background: #e31837;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: #444;
+        }
+
+        .memos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .memo-item {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .memo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .memo-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .memo-date {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .no-memos {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+            grid-column: 1 / -1;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            height: 200px;
+            resize: vertical;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .form-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .form-buttons .cancel {
+            background: #666;
+            color: white;
+        }
+
+        .form-buttons .submit {
+            background: #e31837;
+            color: white;
+        }
+
+        @media (max-width: 1200px) {
+            .memos-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            .search-box {
+                width: 100%;
+            }
+            .search-input {
+                width: 100%;
+            }
+            .memos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="201files.html" class="sidebar-item">201 Files</a>
+        <a href="workplace-policy.html" class="sidebar-item">Workplace Policy</a>
+        <a href="memo.html" class="sidebar-item active">Memorandum</a>
+        <a href="forms.html" class="sidebar-item">Forms</a>
+        <a href="supplies-inventory.html" class="sidebar-item">Supplies Inventory</a>
+        <a href="manpower.html" class="sidebar-item">Manpower</a>
+        <a href="calendar.html" class="sidebar-item">Calendar of Activity</a>
+        <a href="nte-record.html" class="sidebar-item">NTE Record</a>
+        <a href="recruitment.html" class="sidebar-item">Recruitment Tracker</a>
+        <a href="handbook.html" class="sidebar-item">Employee Handbook</a>
+        <a href="performance.html" class="sidebar-item">Performance Metrics & Documents</a>
+        <a href="compensation.html" class="sidebar-item">Compensation & Benefits</a>
+        <a href="onboarding.html" class="sidebar-item">Onboarding Documents</a>
+        <a href="dtr.html" class="sidebar-item">Daily Time Record</a>
+    </div>
+
+    <div class="main-content">
+        <div class="navigation-buttons">
+            <a href="hradmin.html" class="nav-button">Back to Dashboard</a>
+            <a href="index.html" class="nav-button">Back to Home</a>
+        </div>
+
+        <div class="header-image">
+            <img src="Picture/hr admin.jpg" alt="HR/Admin Department">
+            <div class="header-title">
+                <h1>HR/ADMIN DEPARTMENT</h1>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <h2 class="section-title">MEMORANDUM</h2>
+
+            <div class="controls">
+                <div class="action-buttons">
+                    <button class="action-button" onclick="showAddModal()">ADD MEMORANDUM</button>
+                    <button class="action-button" onclick="removeMemo()">REMOVE MEMORANDUM</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search memorandum..." id="searchInput" onkeyup="searchMemos()">
+                    <button class="search-button" onclick="searchMemos()">SEARCH</button>
+                </div>
+            </div>
+
+            <div class="memos-grid" id="memosGrid">
+                <div class="no-memos">No memorandums found. Click "ADD MEMORANDUM" to create a new memorandum.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Memorandum Modal -->
+    <div class="modal" id="memoModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Add Memorandum</h2>
+            <form id="memoForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label for="memoTitle">Memorandum Title</label>
+                    <input type="text" id="memoTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="memoContent">Memorandum Content</label>
+                    <textarea id="memoContent" required></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let memos = [];
+        let selectedMemo = null;
+
+        function showAddModal() {
+            document.getElementById('modalTitle').textContent = 'Add Memorandum';
+            document.getElementById('memoForm').reset();
+            document.getElementById('memoModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('memoModal').style.display = 'none';
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const formData = {
+                id: selectedMemo || Date.now(),
+                title: document.getElementById('memoTitle').value,
+                content: document.getElementById('memoContent').value,
+                date: new Date().toLocaleDateString()
+            };
+
+            if (selectedMemo) {
+                // Update existing memo
+                memos = memos.map(m => m.id === selectedMemo ? formData : m);
+            } else {
+                // Add new memo
+                memos.push(formData);
+            }
+
+            closeModal();
+            renderMemos();
+            selectedMemo = null;
+        }
+
+        function removeMemo() {
+            if (!selectedMemo) {
+                alert('Please select a memorandum to remove');
+                return;
+            }
+            if (confirm('Are you sure you want to remove this memorandum?')) {
+                memos = memos.filter(m => m.id !== selectedMemo);
+                selectedMemo = null;
+                renderMemos();
+            }
+        }
+
+        function selectMemo(id) {
+            selectedMemo = id;
+            document.querySelectorAll('.memo-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`[data-id="${id}"]`).classList.add('selected');
+        }
+
+        function searchMemos() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredMemos = memos.filter(memo => 
+                memo.title.toLowerCase().includes(searchTerm) ||
+                memo.content.toLowerCase().includes(searchTerm)
+            );
+            renderMemos(filteredMemos);
+        }
+
+        function renderMemos(memosToRender = memos) {
+            const grid = document.getElementById('memosGrid');
+            if (memosToRender.length === 0) {
+                grid.innerHTML = '<div class="no-memos">No memorandums found. Click "ADD MEMORANDUM" to create a new memorandum.</div>';
+                return;
+            }
+
+            grid.innerHTML = memosToRender.map(memo => `
+                <div class="memo-item ${memo.id === selectedMemo ? 'selected' : ''}" 
+                     onclick="selectMemo(${memo.id})"
+                     data-id="${memo.id}">
+                    <div class="memo-title">${memo.title}</div>
+                    <div class="memo-date">Last updated: ${memo.date}</div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize the grid
+        renderMemos();
+    </script>
+</body>
+</html>

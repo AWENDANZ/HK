@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Time Record - HR/Admin Department</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Base styles same as other pages */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-item {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #444;
+        }
+
+        .sidebar-item.active {
+            background-color: #e31837;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+
+        .navigation-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: rgba(227, 24, 55, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .header-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .header-title h1 {
+            color: #e31837;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #000;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background-color: #e31837;
+        }
+
+        /* DTR specific styles */
+        .dtr-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-button {
+            background: #e31837;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: #444;
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .date-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .dtr-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dtr-table th,
+        .dtr-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .dtr-table th {
+            background: #333;
+            color: white;
+            font-weight: bold;
+        }
+
+        .dtr-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .dtr-table tr.selected {
+            background: #ffe6e6;
+        }
+
+        .time-cell {
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-present {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-late {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-absent {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .summary-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .dtr-table tbody tr.selected {
+            background: rgba(227, 24, 55, 0.1);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .form-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .form-buttons .cancel {
+            background: #666;
+            color: white;
+        }
+
+        .form-buttons .submit {
+            background: #e31837;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .search-box {
+                width: 100%;
+            }
+            .search-input {
+                width: 100%;
+            }
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .date-filter {
+                flex-direction: column;
+            }
+            .modal-content {
+                width: 95%;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="201files.html" class="sidebar-item">201 Files</a>
+        <a href="workplace-policy.html" class="sidebar-item">Workplace Policy</a>
+        <a href="memo.html" class="sidebar-item">Memorandum</a>
+        <a href="forms.html" class="sidebar-item">Forms</a>
+        <a href="supplies-inventory.html" class="sidebar-item">Supplies Inventory</a>
+        <a href="manpower.html" class="sidebar-item">Manpower</a>
+        <a href="calendar.html" class="sidebar-item">Calendar of Activity</a>
+        <a href="nte-record.html" class="sidebar-item">NTE Record</a>
+        <a href="recruitment.html" class="sidebar-item">Recruitment Tracker</a>
+        <a href="handbook.html" class="sidebar-item">Employee Handbook</a>
+        <a href="performance.html" class="sidebar-item">Performance Metrics & Documents</a>
+        <a href="compensation.html" class="sidebar-item">Compensation and Benefits Overview</a>
+        <a href="onboarding.html" class="sidebar-item">On Boarding Documents</a>
+        <a href="dtr.html" class="sidebar-item active">D.T.R</a>
+    </div>
+
+    <div class="main-content">
+        <div class="navigation-buttons">
+            <a href="hradmin.html" class="nav-button">Back</a>
+        </div>
+
+        <div class="header-image">
+            <img src="Picture/hr admin.jpg" alt="HR/Admin Department">
+            <div class="header-title">
+                <h1>HR/ADMIN DEPARTMENT</h1>
+            </div>
+        </div>
+
+        <h2 class="section-title">DAILY TIME RECORD</h2>
+
+        <div class="dtr-container">
+            <div class="controls">
+                <div class="action-buttons">
+                    <button class="action-button" onclick="addRecord()">ADD RECORD</button>
+                    <button class="action-button" onclick="generateReport()">GENERATE REPORT</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search employees..." id="searchInput" onkeyup="searchRecords()">
+                    <button class="search-button" onclick="searchRecords()">SEARCH</button>
+                </div>
+            </div>
+
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-title">Present Today</div>
+                    <div class="summary-value">45</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-title">Late Today</div>
+                    <div class="summary-value">3</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-title">Absent Today</div>
+                    <div class="summary-value">2</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-title">On Leave</div>
+                    <div class="summary-value">1</div>
+                </div>
+            </div>
+
+            <div class="date-filter">
+                <input type="date" class="date-input" id="startDate">
+                <input type="date" class="date-input" id="endDate">
+                <button class="action-button" onclick="filterByDate()">FILTER</button>
+            </div>
+
+            <table class="dtr-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Employee ID</th>
+                        <th>Name</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                        <th>Total Hours</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="dtrTableBody">
+                    <!-- Records will be generated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add Record Modal -->
+    <div class="modal" id="addRecordModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('addRecordModal')">&times;</span>
+            <h2>Add DTR Record</h2>
+            <form id="addRecordForm" onsubmit="handleAddRecord(event)">
+                <div class="form-group">
+                    <label for="employeeId">Employee ID</label>
+                    <input type="text" id="employeeId" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeeName">Employee Name</label>
+                    <input type="text" id="employeeName" required>
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="timeIn">Time In</label>
+                    <input type="time" id="timeIn" required>
+                </div>
+                <div class="form-group">
+                    <label for="timeOut">Time Out</label>
+                    <input type="time" id="timeOut" required>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" required>
+                        <option value="">Select Status</option>
+                        <option value="present">Present</option>
+                        <option value="late">Late</option>
+                        <option value="absent">Absent</option>
+                        <option value="leave">On Leave</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel" onclick="closeModal('addRecordModal')">Cancel</button>
+                    <button type="submit" class="submit">Add Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div class="modal" id="generateReportModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('generateReportModal')">&times;</span>
+            <h2>Generate DTR Report</h2>
+            <form id="generateReportForm" onsubmit="handleGenerateReport(event)">
+                <div class="form-group">
+                    <label for="reportType">Report Type</label>
+                    <select id="reportType" required>
+                        <option value="">Select Report Type</option>
+                        <option value="individual">Individual Employee Report</option>
+                        <option value="department">Department Report</option>
+                        <option value="summary">Summary Report</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="employeeFilter">Employee (Optional)</label>
+                    <input type="text" id="employeeFilter" placeholder="Enter employee name or ID">
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="reportStartDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="reportEndDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="includeOptions">Include in Report</label>
+                    <div style="margin-top: 10px;">
+                        <label style="display: inline-flex; align-items: center; margin-right: 20px;">
+                            <input type="checkbox" id="includeLate" checked> Late Records
+                        </label>
+                        <label style="display: inline-flex; align-items: center; margin-right: 20px;">
+                            <input type="checkbox" id="includeAbsent" checked> Absences
+                        </label>
+                        <label style="display: inline-flex; align-items: center;">
+                            <input type="checkbox" id="includeLeave" checked> Leaves
+                        </label>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel" onclick="closeModal('generateReportModal')">Cancel</button>
+                    <button type="submit" class="submit">Generate Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Record Modal -->
+    <div class="modal" id="editRecordModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('editRecordModal')">&times;</span>
+            <h2>Edit DTR Record</h2>
+            <form id="editRecordForm" onsubmit="handleEditRecord(event)">
+                <input type="hidden" id="editRecordId">
+                <div class="form-group">
+                    <label for="editEmployeeId">Employee ID</label>
+                    <input type="text" id="editEmployeeId" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmployeeName">Employee Name</label>
+                    <input type="text" id="editEmployeeName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDate">Date</label>
+                    <input type="date" id="editDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTimeIn">Time In</label>
+                    <input type="time" id="editTimeIn" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTimeOut">Time Out</label>
+                    <input type="time" id="editTimeOut" required>
+                </div>
+                <div class="form-group">
+                    <label for="editStatus">Status</label>
+                    <select id="editStatus" required>
+                        <option value="">Select Status</option>
+                        <option value="present">Present</option>
+                        <option value="late">Late</option>
+                        <option value="absent">Absent</option>
+                        <option value="leave">On Leave</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel" onclick="closeModal('editRecordModal')">Cancel</button>
+                    <button type="submit" class="submit">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let records = [
+            {
+                id: 1,
+                date: '2025-03-24',
+                employeeId: 'EMP001',
+                name: 'John Doe',
+                timeIn: '08:00',
+                timeOut: '17:00',
+                totalHours: '9.0',
+                status: 'present'
+            },
+            {
+                id: 2,
+                date: '2025-03-24',
+                employeeId: 'EMP002',
+                name: 'Jane Smith',
+                timeIn: '08:30',
+                timeOut: '17:30',
+                totalHours: '9.0',
+                status: 'late'
+            }
+        ];
+
+        let selectedRecord = null;
+
+        function renderRecords(records) {
+            const tbody = document.getElementById('dtrTableBody');
+            tbody.innerHTML = records.map(record => `
+                <tr class="${record.id === selectedRecord ? 'selected' : ''}"
+                    onclick="selectRecord(${record.id})"
+                    data-id="${record.id}">
+                    <td>${record.date}</td>
+                    <td>${record.employeeId}</td>
+                    <td>${record.name}</td>
+                    <td class="time-cell">${record.timeIn}</td>
+                    <td class="time-cell">${record.timeOut}</td>
+                    <td class="time-cell">${record.totalHours}</td>
+                    <td>
+                        <span class="status-badge status-${record.status}">
+                            ${record.status.charAt(0).toUpperCase() + record.status.slice(1)}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="action-button" onclick="editRecord(${record.id})">Edit</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function selectRecord(id) {
+            selectedRecord = id;
+            document.querySelectorAll('.dtr-table tr').forEach(row => {
+                row.classList.remove('selected');
+            });
+            document.querySelector(`tr[data-id="${id}"]`).classList.add('selected');
+        }
+
+        function addRecord() {
+            document.getElementById('addRecordModal').style.display = 'block';
+        }
+
+        function editRecord(id) {
+            const record = records.find(r => r.id === id);
+            if (record) {
+                // Fill the edit form with the record data
+                document.getElementById('editRecordId').value = record.id;
+                document.getElementById('editEmployeeId').value = record.employeeId;
+                document.getElementById('editEmployeeName').value = record.name;
+                document.getElementById('editDate').value = record.date;
+                document.getElementById('editTimeIn').value = record.timeIn;
+                document.getElementById('editTimeOut').value = record.timeOut;
+                document.getElementById('editStatus').value = record.status;
+                
+                // Show the edit modal
+                document.getElementById('editRecordModal').style.display = 'block';
+            }
+        }
+
+        function generateReport() {
+            document.getElementById('generateReportModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function handleAddRecord(event) {
+            event.preventDefault();
+            const formData = {
+                employeeId: document.getElementById('employeeId').value,
+                employeeName: document.getElementById('employeeName').value,
+                date: document.getElementById('date').value,
+                timeIn: document.getElementById('timeIn').value,
+                timeOut: document.getElementById('timeOut').value,
+                status: document.getElementById('status').value
+            };
+            
+            // Calculate total hours
+            const timeIn = new Date(`2000-01-01T${formData.timeIn}`);
+            const timeOut = new Date(`2000-01-01T${formData.timeOut}`);
+            const diffHours = (timeOut - timeIn) / (1000 * 60 * 60);
+            formData.totalHours = diffHours.toFixed(1);
+            
+            // Add the record to your data structure
+            records.push({
+                id: Date.now(),
+                ...formData
+            });
+            
+            // Close the modal and reset form
+            closeModal('addRecordModal');
+            document.getElementById('addRecordForm').reset();
+            
+            // Refresh the display
+            renderRecords(records);
+        }
+
+        function handleGenerateReport(event) {
+            event.preventDefault();
+            const reportData = {
+                type: document.getElementById('reportType').value,
+                employee: document.getElementById('employeeFilter').value,
+                startDate: document.getElementById('reportStartDate').value,
+                endDate: document.getElementById('reportEndDate').value,
+                includeLate: document.getElementById('includeLate').checked,
+                includeAbsent: document.getElementById('includeAbsent').checked,
+                includeLeave: document.getElementById('includeLeave').checked
+            };
+            
+            // Generate the report based on the selected options
+            console.log('Generating report:', reportData);
+            
+            // Close the modal and reset form
+            closeModal('generateReportModal');
+            document.getElementById('generateReportForm').reset();
+        }
+
+        function handleEditRecord(event) {
+            event.preventDefault();
+            const recordId = parseInt(document.getElementById('editRecordId').value);
+            const formData = {
+                id: recordId,
+                employeeId: document.getElementById('editEmployeeId').value,
+                name: document.getElementById('editEmployeeName').value,
+                date: document.getElementById('editDate').value,
+                timeIn: document.getElementById('editTimeIn').value,
+                timeOut: document.getElementById('editTimeOut').value,
+                status: document.getElementById('editStatus').value
+            };
+            
+            // Calculate total hours
+            const timeIn = new Date(`2000-01-01T${formData.timeIn}`);
+            const timeOut = new Date(`2000-01-01T${formData.timeOut}`);
+            const diffHours = (timeOut - timeIn) / (1000 * 60 * 60);
+            formData.totalHours = diffHours.toFixed(1);
+            
+            // Update the record in the data structure
+            records = records.map(record => 
+                record.id === recordId ? formData : record
+            );
+            
+            // Close the modal and reset form
+            closeModal('editRecordModal');
+            document.getElementById('editRecordForm').reset();
+            
+            // Refresh the display
+            renderRecords(records);
+        }
+
+        function searchRecords() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredRecords = records.filter(record => 
+                record.name.toLowerCase().includes(searchTerm) ||
+                record.employeeId.toLowerCase().includes(searchTerm)
+            );
+            renderRecords(filteredRecords);
+        }
+
+        function filterByDate() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            // Implementation for date filtering
+            alert('Date filter functionality will be implemented here');
+        }
+
+        // Set default date values
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('startDate').value = today;
+        document.getElementById('endDate').value = today;
+
+        // Initialize the table
+        renderRecords(records);
+    </script>
+</body>
+</html>

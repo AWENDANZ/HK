@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruitment Tracker - HR/Admin Department</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Base styles same as other pages */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-item {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #444;
+        }
+
+        .sidebar-item.active {
+            background-color: #e31837;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+
+        .navigation-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: rgba(227, 24, 55, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .header-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .header-title h1 {
+            color: #e31837;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #000;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background-color: #e31837;
+        }
+
+        /* Recruitment specific styles */
+        .recruitment-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-button {
+            background: #e31837;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: #444;
+        }
+
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .kanban-column {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .column-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e31837;
+        }
+
+        .kanban-card {
+            background: white;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .kanban-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .kanban-card.selected {
+            border: 2px solid #e31837;
+            background: #ffe6e6;
+        }
+
+        .candidate-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .position {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .date {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 1200px) {
+            .kanban-board {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .search-box {
+                width: 100%;
+            }
+            .search-input {
+                width: 100%;
+            }
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="201files.html" class="sidebar-item">201 Files</a>
+        <a href="workplace-policy.html" class="sidebar-item">Workplace Policy</a>
+        <a href="memo.html" class="sidebar-item">Memorandum</a>
+        <a href="forms.html" class="sidebar-item">Forms</a>
+        <a href="supplies-inventory.html" class="sidebar-item">Supplies Inventory</a>
+        <a href="manpower.html" class="sidebar-item">Manpower</a>
+        <a href="calendar.html" class="sidebar-item">Calendar of Activity</a>
+        <a href="nte-record.html" class="sidebar-item">NTE Record</a>
+        <a href="recruitment.html" class="sidebar-item active">Recruitment Tracker</a>
+        <a href="handbook.html" class="sidebar-item">Employee Handbook</a>
+        <a href="performance.html" class="sidebar-item">Performance Metrics & Documents</a>
+        <a href="compensation.html" class="sidebar-item">Compensation and Benefits Overview</a>
+        <a href="onboarding.html" class="sidebar-item">On Boarding Documents</a>
+        <a href="dtr.html" class="sidebar-item">D.T.R</a>
+    </div>
+
+    <div class="main-content">
+        <div class="navigation-buttons">
+            <a href="hradmin.html" class="nav-button">Back</a>
+        </div>
+
+        <div class="header-image">
+            <img src="Picture/hr admin.jpg" alt="HR/Admin Department">
+            <div class="header-title">
+                <h1>HR/ADMIN DEPARTMENT</h1>
+            </div>
+        </div>
+
+        <h2 class="section-title">RECRUITMENT TRACKER</h2>
+
+        <div class="recruitment-container">
+            <div class="controls">
+                <div class="action-buttons">
+                    <button class="action-button" onclick="addCandidate()">ADD CANDIDATE</button>
+                    <button class="action-button" onclick="removeCandidate()">REMOVE CANDIDATE</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search candidates..." id="searchInput" onkeyup="searchCandidates()">
+                    <button class="search-button" onclick="searchCandidates()">SEARCH</button>
+                </div>
+            </div>
+
+            <div class="kanban-board">
+                <div class="kanban-column">
+                    <div class="column-header">Applied</div>
+                    <div id="appliedColumn"></div>
+                </div>
+                <div class="kanban-column">
+                    <div class="column-header">Interview</div>
+                    <div id="interviewColumn"></div>
+                </div>
+                <div class="kanban-column">
+                    <div class="column-header">Assessment</div>
+                    <div id="assessmentColumn"></div>
+                </div>
+                <div class="kanban-column">
+                    <div class="column-header">Hired</div>
+                    <div id="hiredColumn"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let candidates = [];
+        let selectedCandidate = null;
+
+        // Sample data
+        const sampleCandidates = [
+            {
+                id: 1,
+                name: 'John Doe',
+                position: 'Software Engineer',
+                date: '2025-03-24',
+                status: 'applied'
+            },
+            {
+                id: 2,
+                name: 'Jane Smith',
+                position: 'HR Manager',
+                date: '2025-03-23',
+                status: 'interview'
+            }
+        ];
+
+        function addCandidate() {
+            // Implementation for adding candidates
+            alert('Add candidate functionality will be implemented here');
+        }
+
+        function removeCandidate() {
+            if (!selectedCandidate) {
+                alert('Please select a candidate to remove');
+                return;
+            }
+            // Implementation for removing candidates
+            alert('Remove candidate functionality will be implemented here');
+        }
+
+        function searchCandidates() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            // Implementation for searching candidates
+        }
+
+        function selectCandidate(id) {
+            selectedCandidate = id;
+            document.querySelectorAll('.kanban-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-id="${id}"]`).classList.add('selected');
+        }
+
+        function renderCandidates(candidates = sampleCandidates) {
+            const columns = {
+                applied: document.getElementById('appliedColumn'),
+                interview: document.getElementById('interviewColumn'),
+                assessment: document.getElementById('assessmentColumn'),
+                hired: document.getElementById('hiredColumn')
+            };
+
+            // Clear all columns
+            Object.values(columns).forEach(column => column.innerHTML = '');
+
+            // Distribute candidates to columns
+            candidates.forEach(candidate => {
+                const card = `
+                    <div class="kanban-card ${candidate.id === selectedCandidate ? 'selected' : ''}"
+                         onclick="selectCandidate(${candidate.id})"
+                         data-id="${candidate.id}">
+                        <div class="candidate-name">${candidate.name}</div>
+                        <div class="position">${candidate.position}</div>
+                        <div class="date">Applied: ${candidate.date}</div>
+                    </div>
+                `;
+                columns[candidate.status].innerHTML += card;
+            });
+        }
+
+        // Initialize the board
+        renderCandidates();
+    </script>
+</body>
+</html>

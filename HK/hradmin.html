@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR/Admin Department - Hon-Kwang Electric</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .department-header {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .department-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .department-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .department-title h1 {
+            color: #e31837;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #e31837;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-button::before {
+            content: "←";
+            font-size: 20px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .grid-item {
+            background-color: #e31837;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .grid-item:active {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item.light {
+            background-color: #ff1a1a;
+        }
+
+        .grid-item.light:hover {
+            background-color: #ff3333;
+        }
+
+        @media (max-width: 1200px) {
+            .grid-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .department-title h1 {
+                font-size: 28px;
+            }
+            .back-button {
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html#departments" class="back-button">Back to Departments</a>
+    
+    <div class="department-header">
+        <img src="Picture/hr admin.jpg" alt="HR/Admin Department">
+        <div class="department-title">
+            <h1>HR/ADMIN DEPARTMENT</h1>
+        </div>
+    </div>
+
+    <div class="grid-container">
+        <div class="grid-item" onclick="window.location.href='201files.html'">201 FILES</div>
+        <div class="grid-item" onclick="window.location.href='workplace-policy.html'">WORKPLACE POLICY</div>
+        <div class="grid-item" onclick="window.location.href='memo.html'">MEMORANDUM</div>
+        <div class="grid-item" onclick="window.location.href='forms.html'">FORMS</div>
+        <div class="grid-item" onclick="window.location.href='supplies-inventory.html'">SUPPLIES INVENTORY</div>
+        <div class="grid-item light" onclick="window.location.href='manpower.html'">MANPOWER</div>
+        <div class="grid-item light" onclick="window.location.href='calendar.html'">CALENDAR OF ACTIVITY</div>
+        <div class="grid-item light" onclick="window.location.href='nte-record.html'">NTE RECORD</div>
+        <div class="grid-item light" onclick="window.location.href='recruitment.html'">RECRUITMENT TRACKER</div>
+        <div class="grid-item light" onclick="window.location.href='handbook.html'">EMPLOYEE HANDBOOK</div>
+        <div class="grid-item" onclick="window.location.href='performance.html'">PERFORMANCE METRICS & DOCUMENTS</div>
+        <div class="grid-item" onclick="window.location.href='compensation.html'">COMPENSATION & BENEFITS OVERVIEW</div>
+        <div class="grid-item" onclick="window.location.href='onboarding.html'">ON BOARDING DOCUMENTS</div>
+        <div class="grid-item" onclick="window.location.href='dtr.html'">D.T.R</div>
+        <div class="grid-item" onclick="window.location.href='qr-generator.html'">QR CODE GENERATOR</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manpower - HR/Admin Department</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Same styles as supplies-inventory.html */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-item {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #444;
+        }
+
+        .sidebar-item.active {
+            background-color: #e31837;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+
+        .navigation-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: rgba(227, 24, 55, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .header-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .header-title h1 {
+            color: #e31837;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #000;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background-color: #e31837;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 40px auto 20px;
+            padding: 0 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-button {
+            background: #e31837;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: #444;
+        }
+
+        .content-area {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .no-items {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            .search-box {
+                width: 100%;
+            }
+            .search-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="201files.html" class="sidebar-item">201 Files</a>
+        <a href="workplace-policy.html" class="sidebar-item">Workplace Policy</a>
+        <a href="memo.html" class="sidebar-item">Memorandum</a>
+        <a href="forms.html" class="sidebar-item">Forms</a>
+        <a href="supplies-inventory.html" class="sidebar-item">Supplies Inventory</a>
+        <a href="manpower.html" class="sidebar-item active">Manpower</a>
+        <a href="calendar.html" class="sidebar-item">Calendar of Activity</a>
+        <a href="nte-record.html" class="sidebar-item">NTE Record</a>
+        <a href="recruitment.html" class="sidebar-item">Recruitment Tracker</a>
+        <a href="handbook.html" class="sidebar-item">Employee Handbook</a>
+        <a href="performance.html" class="sidebar-item">Performance Metrics & Documents</a>
+        <a href="compensation.html" class="sidebar-item">Compensation and Benefits Overview</a>
+        <a href="onboarding.html" class="sidebar-item">On Boarding Documents</a>
+        <a href="dtr.html" class="sidebar-item">D.T.R</a>
+    </div>
+
+    <div class="main-content">
+        <div class="navigation-buttons">
+            <a href="hradmin.html" class="nav-button">Back</a>
+        </div>
+
+        <div class="header-image">
+            <img src="Picture/hr admin.jpg" alt="HR/Admin Department">
+            <div class="header-title">
+                <h1>HR/ADMIN DEPARTMENT</h1>
+            </div>
+        </div>
+
+        <h2 class="section-title">MANPOWER</h2>
+
+        <div class="controls">
+            <div class="action-buttons">
+                <button class="action-button" onclick="showAddModal()">ADD MANPOWER</button>
+                <button class="action-button" onclick="removeItem()">REMOVE MANPOWER</button>
+            </div>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search manpower..." id="searchInput" onkeyup="searchItems()">
+                <button class="search-button" onclick="searchItems()">SEARCH</button>
+            </div>
+        </div>
+
+        <div class="content-area" id="contentArea">
+            <div class="no-items">No manpower records found. Click "ADD MANPOWER" to create a new record.</div>
+        </div>
+    </div>
+
+    <script>
+        let items = [];
+        let selectedItem = null;
+
+        function showAddModal() {
+            // Implementation for adding manpower records
+            alert('Add Manpower functionality will be implemented here');
+        }
+
+        function removeItem() {
+            // Implementation for removing manpower records
+            alert('Remove Manpower functionality will be implemented here');
+        }
+
+        function searchItems() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            // Implementation for searching manpower records
+        }
+    </script>
+</body>
+</html>

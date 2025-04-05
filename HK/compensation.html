@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compensation and Benefits - HR/Admin Department</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Base styles same as other pages */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-item {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #444;
+        }
+
+        .sidebar-item.active {
+            background-color: #e31837;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+
+        .navigation-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: rgba(227, 24, 55, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .header-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .header-title h1 {
+            color: #e31837;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #000;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background-color: #e31837;
+        }
+
+        /* Compensation specific styles */
+        .compensation-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-icon {
+            font-size: 24px;
+            color: #e31837;
+            margin-bottom: 10px;
+        }
+
+        .benefit-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .benefit-description {
+            color: #666;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .salary-structure {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .structure-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .structure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .structure-item {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .item-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #444;
+        }
+
+        .item-value {
+            color: #666;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-button {
+            background: #e31837;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: #444;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .search-box {
+                width: 100%;
+            }
+            .search-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="201files.html" class="sidebar-item">201 Files</a>
+        <a href="workplace-policy.html" class="sidebar-item">Workplace Policy</a>
+        <a href="memo.html" class="sidebar-item">Memorandum</a>
+        <a href="forms.html" class="sidebar-item">Forms</a>
+        <a href="supplies-inventory.html" class="sidebar-item">Supplies Inventory</a>
+        <a href="manpower.html" class="sidebar-item">Manpower</a>
+        <a href="calendar.html" class="sidebar-item">Calendar of Activity</a>
+        <a href="nte-record.html" class="sidebar-item">NTE Record</a>
+        <a href="recruitment.html" class="sidebar-item">Recruitment Tracker</a>
+        <a href="handbook.html" class="sidebar-item">Employee Handbook</a>
+        <a href="performance.html" class="sidebar-item">Performance Metrics & Documents</a>
+        <a href="compensation.html" class="sidebar-item active">Compensation and Benefits Overview</a>
+        <a href="onboarding.html" class="sidebar-item">On Boarding Documents</a>
+        <a href="dtr.html" class="sidebar-item">D.T.R</a>
+    </div>
+
+    <div class="main-content">
+        <div class="navigation-buttons">
+            <a href="hradmin.html" class="nav-button">Back</a>
+        </div>
+
+        <div class="header-image">
+            <img src="Picture/hr admin.jpg" alt="HR/Admin Department">
+            <div class="header-title">
+                <h1>HR/ADMIN DEPARTMENT</h1>
+            </div>
+        </div>
+
+        <h2 class="section-title">COMPENSATION AND BENEFITS OVERVIEW</h2>
+
+        <div class="compensation-container">
+            <div class="controls">
+                <div class="action-buttons">
+                    <button class="action-button" onclick="updateBenefits()">UPDATE BENEFITS</button>
+                    <button class="action-button" onclick="downloadReport()">DOWNLOAD REPORT</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search benefits..." id="searchInput" onkeyup="searchBenefits()">
+                    <button class="search-button" onclick="searchBenefits()">SEARCH</button>
+                </div>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏥</div>
+                    <div class="benefit-title">Healthcare</div>
+                    <div class="benefit-description">
+                        Comprehensive medical, dental, and vision coverage for employees and dependents.
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <div class="benefit-title">Performance Bonus</div>
+                    <div class="benefit-description">
+                        Annual performance-based bonus program with clear metrics and goals.
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎓</div>
+                    <div class="benefit-title">Education</div>
+                    <div class="benefit-description">
+                        Training and development programs with certification support.
+                    </div>
+                </div>
+            </div>
+
+            <div class="salary-structure">
+                <div class="structure-title">Salary Structure Overview</div>
+                <div class="structure-grid" id="salaryGrid">
+                    <!-- Salary structure items will be generated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const salaryStructure = [
+            {
+                title: 'Base Salary',
+                description: 'Competitive base pay structure'
+            },
+            {
+                title: 'Annual Increment',
+                description: 'Performance-based annual salary review'
+            },
+            {
+                title: '13th Month Pay',
+                description: 'Mandatory annual benefit'
+            },
+            {
+                title: 'Overtime Pay',
+                description: 'Additional compensation for extended hours'
+            }
+        ];
+
+        function renderSalaryStructure() {
+            const grid = document.getElementById('salaryGrid');
+            grid.innerHTML = salaryStructure.map(item => `
+                <div class="structure-item">
+                    <div class="item-title">${item.title}</div>
+                    <div class="item-value">${item.description}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateBenefits() {
+            // Implementation for updating benefits
+            alert('Update benefits functionality will be implemented here');
+        }
+
+        function downloadReport() {
+            // Implementation for downloading reports
+            alert('Download report functionality will be implemented here');
+        }
+
+        function searchBenefits() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            // Implementation for searching benefits
+        }
+
+        // Initialize the salary structure
+        renderSalaryStructure();
+    </script>
+</body>
+</html>

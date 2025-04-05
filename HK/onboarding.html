@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On Boarding Documents - HR/Admin Department</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Base styles same as other pages */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-item {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #444;
+        }
+
+        .sidebar-item.active {
+            background-color: #e31837;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+
+        .navigation-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: rgba(227, 24, 55, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .header-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .header-title h1 {
+            color: #e31837;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #000;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background-color: #e31837;
+        }
+
+        /* Onboarding specific styles */
+        .onboarding-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-button {
+            background: #e31837;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: #444;
+        }
+
+        .checklist-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .checklist-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .checklist-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #e31837;
+            transition: width 0.3s ease;
+        }
+
+        .checklist-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-checkbox {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .item-label {
+            flex: 1;
+            color: #444;
+        }
+
+        .item-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .form-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .form-buttons .cancel {
+            background: #666;
+            color: white;
+        }
+
+        .form-buttons .submit {
+            background: #e31837;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .search-box {
+                width: 100%;
+            }
+            .search-input {
+                width: 100%;
+            }
+            .checklist-container {
+                grid-template-columns: 1fr;
+            }
+            .modal-content {
+                width: 95%;
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="201files.html" class="sidebar-item">201 Files</a>
+        <a href="workplace-policy.html" class="sidebar-item">Workplace Policy</a>
+        <a href="memo.html" class="sidebar-item">Memorandum</a>
+        <a href="forms.html" class="sidebar-item">Forms</a>
+        <a href="supplies-inventory.html" class="sidebar-item">Supplies Inventory</a>
+        <a href="manpower.html" class="sidebar-item">Manpower</a>
+        <a href="calendar.html" class="sidebar-item">Calendar of Activity</a>
+        <a href="nte-record.html" class="sidebar-item">NTE Record</a>
+        <a href="recruitment.html" class="sidebar-item">Recruitment Tracker</a>
+        <a href="handbook.html" class="sidebar-item">Employee Handbook</a>
+        <a href="performance.html" class="sidebar-item">Performance Metrics & Documents</a>
+        <a href="compensation.html" class="sidebar-item">Compensation and Benefits Overview</a>
+        <a href="onboarding.html" class="sidebar-item active">On Boarding Documents</a>
+        <a href="dtr.html" class="sidebar-item">D.T.R</a>
+    </div>
+
+    <div class="main-content">
+        <div class="navigation-buttons">
+            <a href="hradmin.html" class="nav-button">Back</a>
+        </div>
+
+        <div class="header-image">
+            <img src="Picture/hr admin.jpg" alt="HR/Admin Department">
+            <div class="header-title">
+                <h1>HR/ADMIN DEPARTMENT</h1>
+            </div>
+        </div>
+
+        <h2 class="section-title">ON BOARDING DOCUMENTS</h2>
+
+        <div class="onboarding-container">
+            <div class="controls">
+                <div class="action-buttons">
+                    <button class="action-button" onclick="addEmployee()">ADD EMPLOYEE</button>
+                    <button class="action-button" onclick="generateReport()">GENERATE REPORT</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search employees..." id="searchInput" onkeyup="searchEmployees()">
+                    <button class="search-button" onclick="searchEmployees()">SEARCH</button>
+                </div>
+            </div>
+
+            <div class="checklist-container" id="checklistContainer">
+                <!-- Checklists will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div class="modal" id="addEmployeeModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('addEmployeeModal')">&times;</span>
+            <h2>Add New Employee</h2>
+            <form id="addEmployeeForm" onsubmit="handleAddEmployee(event)">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="position">Position</label>
+                    <input type="text" id="position" required>
+                </div>
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <input type="text" id="department" required>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel" onclick="closeModal('addEmployeeModal')">Cancel</button>
+                    <button type="submit" class="submit">Add Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div class="modal" id="generateReportModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('generateReportModal')">&times;</span>
+            <h2>Generate Onboarding Report</h2>
+            <form id="generateReportForm" onsubmit="handleGenerateReport(event)">
+                <div class="form-group">
+                    <label for="reportType">Report Type</label>
+                    <select id="reportType" required>
+                        <option value="">Select Report Type</option>
+                        <option value="individual">Individual Employee Report</option>
+                        <option value="department">Department Report</option>
+                        <option value="summary">Summary Report</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dateRange">Date Range</label>
+                    <select id="dateRange" required>
+                        <option value="">Select Date Range</option>
+                        <option value="week">Last Week</option>
+                        <option value="month">Last Month</option>
+                        <option value="quarter">Last Quarter</option>
+                        <option value="year">Last Year</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                </div>
+                <div class="form-group" id="customDateRange" style="display: none;">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="reportStartDate">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="reportEndDate">
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel" onclick="closeModal('generateReportModal')">Cancel</button>
+                    <button type="submit" class="submit">Generate Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const employees = [
+            {
+                id: 1,
+                name: 'John Doe',
+                position: 'Software Engineer',
+                startDate: '2025-03-24',
+                progress: 75,
+                items: [
+                    { id: 1, text: 'Personal Information Form', completed: true },
+                    { id: 2, text: 'Employment Contract', completed: true },
+                    { id: 3, text: 'Company ID Processing', completed: true },
+                    { id: 4, text: 'IT System Access', completed: false }
+                ]
+            },
+            {
+                id: 2,
+                name: 'Jane Smith',
+                position: 'HR Specialist',
+                startDate: '2025-03-25',
+                progress: 50,
+                items: [
+                    { id: 1, text: 'Personal Information Form', completed: true },
+                    { id: 2, text: 'Employment Contract', completed: true },
+                    { id: 3, text: 'Company ID Processing', completed: false },
+                    { id: 4, text: 'IT System Access', completed: false }
+                ]
+            }
+        ];
+
+        function renderChecklists() {
+            const container = document.getElementById('checklistContainer');
+            container.innerHTML = employees.map(employee => `
+                <div class="checklist-card">
+                    <div class="checklist-title">
+                        <span>${employee.name}</span>
+                        <span style="font-size: 14px; color: #666;">${employee.position}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${employee.progress}%"></div>
+                    </div>
+                    <ul class="checklist-items">
+                        ${employee.items.map(item => `
+                            <li class="checklist-item">
+                                <input type="checkbox" class="item-checkbox" 
+                                       ${item.completed ? 'checked' : ''}
+                                       onchange="toggleItem(${employee.id}, ${item.id})">
+                                <span class="item-label">${item.text}</span>
+                                <span class="item-status ${item.completed ? 'status-completed' : 'status-pending'}">
+                                    ${item.completed ? 'Completed' : 'Pending'}
+                                </span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+
+        function toggleItem(employeeId, itemId) {
+            // Implementation for toggling checklist items
+            const employee = employees.find(e => e.id === employeeId);
+            if (employee) {
+                const item = employee.items.find(i => i.id === itemId);
+                if (item) {
+                    item.completed = !item.completed;
+                    // Update progress
+                    const completed = employee.items.filter(i => i.completed).length;
+                    employee.progress = (completed / employee.items.length) * 100;
+                    renderChecklists();
+                }
+            }
+        }
+
+        function addEmployee() {
+            document.getElementById('addEmployeeModal').style.display = 'block';
+        }
+
+        function generateReport() {
+            document.getElementById('generateReportModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function handleAddEmployee(event) {
+            event.preventDefault();
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                position: document.getElementById('position').value,
+                department: document.getElementById('department').value,
+                startDate: document.getElementById('startDate').value
+            };
+            
+            // Add the employee to your data structure
+            console.log('Adding employee:', formData);
+            
+            // Close the modal and reset form
+            closeModal('addEmployeeModal');
+            document.getElementById('addEmployeeForm').reset();
+            
+            // Refresh the display
+            renderChecklists();
+        }
+
+        function handleGenerateReport(event) {
+            event.preventDefault();
+            const reportData = {
+                type: document.getElementById('reportType').value,
+                dateRange: document.getElementById('dateRange').value,
+                startDate: document.getElementById('reportStartDate')?.value,
+                endDate: document.getElementById('reportEndDate')?.value
+            };
+            
+            // Generate the report based on the selected options
+            console.log('Generating report:', reportData);
+            
+            // Close the modal and reset form
+            closeModal('generateReportModal');
+            document.getElementById('generateReportForm').reset();
+        }
+
+        // Show/hide custom date range based on selection
+        document.getElementById('dateRange')?.addEventListener('change', function(e) {
+            const customDateRange = document.getElementById('customDateRange');
+            if (e.target.value === 'custom') {
+                customDateRange.style.display = 'block';
+            } else {
+                customDateRange.style.display = 'none';
+            }
+        });
+
+        function searchEmployees() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            // Implementation for searching employees
+        }
+
+        // Initialize the checklists
+        renderChecklists();
+    </script>
+</body>
+</html>

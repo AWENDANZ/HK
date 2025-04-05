@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator - Hon-Kwang Electric</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .page-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            color: #e31837;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="date"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #e31837;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
+            background: white;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-6-6h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+        }
+
+        .emergency-contact {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid #e1e1e1;
+        }
+
+        .emergency-contact h3 {
+            color: #e31837;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+
+        button {
+            background: #e31837;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto;
+            min-width: 200px;
+        }
+
+        button:hover {
+            background: #c41430;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(227, 24, 55, 0.2);
+        }
+
+        #qrcode {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 30px;
+            padding: 20px;
+            position: relative;
+            width: 100%;
+        }
+
+        .qr-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #e31837, #ff4757);
+            border-radius: 20px;
+            margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(227, 24, 55, 0.15);
+            animation: fadeIn 0.5s ease;
+            max-width: fit-content;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #qrcode img {
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid #e1e1e1;
+        }
+
+        .back-button:hover {
+            background: #e31837;
+            color: white;
+            border-color: #e31837;
+            transform: translateX(-5px);
+        }
+
+        .download-button {
+            background: #28a745 !important;
+            display: inline-flex !important;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            margin-top: 30px !important;
+            padding: 14px 28px;
+            border-radius: 10px;
+            animation: bounceIn 0.5s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .download-button:hover {
+            background: #218838 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-section h2 {
+            color: #e31837;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: 500;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .status-message {
+            text-align: center;
+            color: #666;
+            margin: 20px 0;
+            font-size: 0.9em;
+            width: 100%;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px auto;
+        }
+
+        .save-button {
+            background: #2196F3 !important;
+        }
+
+        .save-button:hover {
+            background: #1976D2 !important;
+        }
+
+        .load-button {
+            background: #4CAF50 !important;
+        }
+
+        .load-button:hover {
+            background: #388E3C !important;
+        }
+
+        .clear-button {
+            background: #f44336 !important;
+        }
+
+        .clear-button:hover {
+            background: #d32f2f !important;
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <a href="hradmin.html" class="back-button">← Back to HR/Admin</a>
+        
+        <div class="container">
+            <h1>Employee QR Code Generator</h1>
+            
+            <form id="qrForm">
+                <div class="form-section">
+                    <h2>Employee Information</h2>
+                    <div class="form-group">
+                        <label for="name">Full Name:</label>
+                        <input type="text" id="name" required placeholder="Enter employee's full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id">Employee ID:</label>
+                        <input type="text" id="id" required placeholder="Enter employee ID">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="position">Position:</label>
+                        <input type="text" id="position" required placeholder="Enter employee position">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birthdate">Birthdate:</label>
+                        <input type="date" id="birthdate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dateHired">Date Hired:</label>
+                        <input type="date" id="dateHired" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" required placeholder="Enter age" min="18" max="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" required>
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="civilStatus">Civil Status:</label>
+                        <select id="civilStatus" required>
+                            <option value="">Select civil status</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Widowed">Widowed</option>
+                            <option value="Separated">Separated</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="citizenship">Citizenship:</label>
+                        <input type="text" id="citizenship" required placeholder="Enter citizenship">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Family Information</h2>
+                    <div class="form-group">
+                        <label for="fatherName">Father's Name:</label>
+                        <input type="text" id="fatherName" required placeholder="Enter father's full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="motherName">Mother's Name:</label>
+                        <input type="text" id="motherName" required placeholder="Enter mother's full name">
+                    </div>
+                </div>
+
+                <div class="emergency-contact">
+                    <h3>Emergency Contact Information</h3>
+                    <div class="form-group">
+                        <label for="emergencyName">Contact Name:</label>
+                        <input type="text" id="emergencyName" required placeholder="Enter emergency contact name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emergencyPhone">Contact Phone:</label>
+                        <input type="text" id="emergencyPhone" required placeholder="Enter emergency contact phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emergencyEmail">Contact Email:</label>
+                        <input type="email" id="emergencyEmail" required placeholder="Enter emergency contact email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emergencyAddress">Contact Address:</label>
+                        <input type="text" id="emergencyAddress" required placeholder="Enter emergency contact address">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" onclick="saveFormData()" class="save-button">💾 Save Data</button>
+                    <button type="button" onclick="loadFormData()" class="load-button">📂 Load Data</button>
+                    <button type="button" onclick="clearFormData()" class="clear-button">🗑️ Clear Data</button>
+                </div>
+
+                <button type="button" onclick="generateQR()" id="generateBtn">Generate QR Code</button>
+            </form>
+
+            <div id="qrcode"></div>
+        </div>
+    </div>
+
+    <script>
+        // Preload the logo image
+        const logoImg = new Image();
+        logoImg.src = 'Picture/logo.png';
+
+        // Function to save form data
+        function saveFormData() {
+            const formData = {
+                name: document.getElementById('name').value,
+                id: document.getElementById('id').value,
+                position: document.getElementById('position').value,
+                birthdate: document.getElementById('birthdate').value,
+                dateHired: document.getElementById('dateHired').value,
+                age: document.getElementById('age').value,
+                gender: document.getElementById('gender').value,
+                civilStatus: document.getElementById('civilStatus').value,
+                citizenship: document.getElementById('citizenship').value,
+                passport: document.getElementById('passport').value,
+                fatherName: document.getElementById('fatherName').value,
+                motherName: document.getElementById('motherName').value,
+                emergencyName: document.getElementById('emergencyName').value,
+                emergencyPhone: document.getElementById('emergencyPhone').value,
+                emergencyEmail: document.getElementById('emergencyEmail').value,
+                emergencyAddress: document.getElementById('emergencyAddress').value
+            };
+
+            localStorage.setItem('qrFormData', JSON.stringify(formData));
+            alert('Data saved successfully!');
+        }
+
+        // Function to load form data
+        function loadFormData() {
+            const savedData = localStorage.getItem('qrFormData');
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                Object.keys(formData).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = formData[key];
+                    }
+                });
+                alert('Data loaded successfully!');
+            } else {
+                alert('No saved data found!');
+            }
+        }
+
+        // Function to clear form data
+        function clearFormData() {
+            if (confirm('Are you sure you want to clear all saved data?')) {
+                localStorage.removeItem('qrFormData');
+                document.getElementById('qrForm').reset();
+                alert('Data cleared successfully!');
+            }
+        }
+
+        // Load saved data when page loads
+        window.onload = function() {
+            loadFormData();
+        };
+
+        function generateQR() {
+            const generateBtn = document.getElementById('generateBtn');
+            const qrcodeDiv = document.getElementById('qrcode');
+            
+            // Clear previous QR code and add loading indicator
+            qrcodeDiv.innerHTML = `
+                <div class="loading-container" style="text-align: center; padding: 20px;">
+                    <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 15px;"></div>
+                    <div style="color: #666;">Generating QR Code...</div>
+                </div>`;
+            
+            generateBtn.innerHTML = '<span class="loading"></span>Generating...';
+            generateBtn.disabled = true;
+
+            // Add timeout warning
+            const timeoutWarning = setTimeout(() => {
+                qrcodeDiv.innerHTML += `
+                    <div style="color: #e31837; margin-top: 15px; text-align: center;">
+                        Generation is taking longer than expected. Please try again.
+                        <button onclick="generateQR()" style="margin-top: 10px; background: #e31837;">
+                            Try Again
+                        </button>
+                    </div>`;
+                generateBtn.innerHTML = 'Generate QR Code';
+                generateBtn.disabled = false;
+            }, 10000); // Show warning after 10 seconds
+
+            // Get all form values and sanitize them
+            const sanitizeText = (text) => {
+                // First, normalize the text to decompose special characters
+                let normalized = text.normalize('NFD');
+                // Replace special characters with their ASCII equivalents
+                normalized = normalized
+                    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+                    .replace(/[^\x20-\x7E]/g, '') // Keep only printable ASCII characters
+                    .replace(/[áàâãä]/g, 'a')
+                    .replace(/[éèêë]/g, 'e')
+                    .replace(/[íìîï]/g, 'i')
+                    .replace(/[óòôõö]/g, 'o')
+                    .replace(/[úùûü]/g, 'u')
+                    .replace(/[ýÿ]/g, 'y')
+                    .replace(/[ñ]/g, 'n')
+                    .replace(/[ÁÀÂÃÄ]/g, 'A')
+                    .replace(/[ÉÈÊË]/g, 'E')
+                    .replace(/[ÍÌÎÏ]/g, 'I')
+                    .replace(/[ÓÒÔÕÖ]/g, 'O')
+                    .replace(/[ÚÙÛÜ]/g, 'U')
+                    .replace(/[Ý]/g, 'Y')
+                    .replace(/[Ñ]/g, 'N');
+                return normalized.trim();
+            };
+
+            const name = sanitizeText(document.getElementById('name').value);
+            const id = sanitizeText(document.getElementById('id').value);
+            const position = sanitizeText(document.getElementById('position').value);
+            const birthdate = document.getElementById('birthdate').value;
+            const dateHired = document.getElementById('dateHired').value;
+            const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
+            const civilStatus = document.getElementById('civilStatus').value;
+            const citizenship = sanitizeText(document.getElementById('citizenship').value);
+            const fatherName = sanitizeText(document.getElementById('fatherName').value);
+            const motherName = sanitizeText(document.getElementById('motherName').value);
+            const emergencyName = sanitizeText(document.getElementById('emergencyName').value);
+            const emergencyPhone = sanitizeText(document.getElementById('emergencyPhone').value);
+            const emergencyEmail = sanitizeText(document.getElementById('emergencyEmail').value);
+            const emergencyAddress = sanitizeText(document.getElementById('emergencyAddress').value);
+
+            // Create formatted data string with proper line breaks
+            const data = [
+                'HON-KWANG ELECTRIC (PHILS), INC.',
+                '----------------------------------------',
+                'EMPLOYEE INFORMATION:',
+                `Name: ${name}`,
+                `ID: ${id}`,
+                `Position: ${position}`,
+                `Birth Date: ${birthdate}`,
+                `Date Hired: ${dateHired}`,
+                `Age: ${age}`,
+                `Gender: ${gender}`,
+                `Civil Status: ${civilStatus}`,
+                `Citizenship: ${citizenship}`,
+                '',
+                'FAMILY INFORMATION:',
+                `Father's Name: ${fatherName}`,
+                `Mother's Name: ${motherName}`,
+                '',
+                'EMERGENCY CONTACT:',
+                `Name: ${emergencyName}`,
+                `Phone: ${emergencyPhone}`,
+                `Email: ${emergencyEmail}`,
+                `Address: ${emergencyAddress}`,
+                '',
+                `Generated: ${new Date().toLocaleDateString()}`
+            ].join('\n');
+
+            // Clear previous QR code
+            qrcodeDiv.innerHTML = '';
+
+            try {
+                // Generate new QR code with basic settings
+                new QRCode(qrcodeDiv, {
+                    text: data,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.L
+                });
+
+                // Style the QR code image
+                const qrImage = qrcodeDiv.querySelector('img');
+                if (qrImage) {
+                    qrImage.style.padding = '10px';
+                    qrImage.style.background = 'white';
+                }
+
+                // Clear the timeout since QR was generated
+                clearTimeout(timeoutWarning);
+
+                // Add success message
+                const statusMessage = document.createElement('div');
+                statusMessage.className = 'status-message';
+                statusMessage.textContent = 'QR Code generated successfully!';
+                qrcodeDiv.appendChild(statusMessage);
+
+                // Add download button
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'button-container';
+                
+                const downloadBtn = document.createElement('button');
+                downloadBtn.innerHTML = '⬇️ Download QR Code';
+                downloadBtn.className = 'download-button';
+                downloadBtn.onclick = () => {
+                    const qrImage = qrcodeDiv.querySelector('img');
+                    if (qrImage) {
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.width = qrImage.width;
+                        canvas.height = qrImage.height;
+                        
+                        // Fill white background
+                        context.fillStyle = 'white';
+                        context.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Draw QR code
+                        context.drawImage(qrImage, 0, 0);
+                        
+                        const link = document.createElement('a');
+                        link.download = `${name}_qr_code.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    }
+                };
+                
+                buttonContainer.appendChild(downloadBtn);
+                qrcodeDiv.appendChild(buttonContainer);
+
+                // Reset generate button
+                generateBtn.innerHTML = 'Generate QR Code';
+                generateBtn.disabled = false;
+
+            } catch (error) {
+                console.error('Error in QR generation:', error);
+                qrcodeDiv.innerHTML = `
+                    <div style="color: #e31837; text-align: center; padding: 20px;">
+                        Error generating QR code. Please try again.
+                        <button onclick="generateQR()" style="margin-top: 10px; background: #e31837;">
+                            Try Again
+                        </button>
+                    </div>`;
+                generateBtn.innerHTML = 'Generate QR Code';
+                generateBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html> 

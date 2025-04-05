@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>201 Files Active - HR/Admin Department</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-item {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 25px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #444;
+        }
+
+        .sidebar-item.active {
+            background-color: #e31837;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+
+        .header-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .header-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .header-title h1 {
+            color: #e31837;
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #000;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background-color: #e31837;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 40px auto 20px;
+            padding: 0 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-button {
+            background: #e31837;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: #444;
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .file-item {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .file-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .file-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 10px;
+        }
+
+        .file-name {
+            font-size: 14px;
+            color: #333;
+            word-wrap: break-word;
+        }
+
+        .selected {
+            background: rgba(227, 24, 55, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .form-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .form-buttons .cancel {
+            background: #666;
+            color: white;
+        }
+
+        .form-buttons .submit {
+            background: #e31837;
+            color: white;
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+        }
+
+        .navigation-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: rgba(227, 24, 55, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 1200px) {
+            .files-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main-content {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+            .files-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .controls {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            .search-box {
+                width: 100%;
+            }
+            .search-input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 0;
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .files-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="201files.html" class="sidebar-item active">201 Files</a>
+        <a href="workplace-policy.html" class="sidebar-item">Workplace Policy</a>
+        <a href="memo.html" class="sidebar-item">Memorandum</a>
+        <a href="#" class="sidebar-item">Forms</a>
+        <a href="#" class="sidebar-item">Supplies Inventory</a>
+        <a href="#" class="sidebar-item">Manpower</a>
+        <a href="#" class="sidebar-item">Calendar of Activity</a>
+        <a href="#" class="sidebar-item">NTE Record</a>
+        <a href="#" class="sidebar-item">Recruitment Tracker</a>
+        <a href="#" class="sidebar-item">Employee Handbook</a>
+        <a href="#" class="sidebar-item">Performance Metrics & Documents</a>
+        <a href="#" class="sidebar-item">Compensation and Benefits Overview</a>
+        <a href="#" class="sidebar-item">On Boarding Documents</a>
+        <a href="#" class="sidebar-item">D.T.R</a>
+    </div>
+
+    <div class="main-content">
+        <div class="navigation-buttons">
+            <a href="201files.html" class="nav-button">Back</a>
+        </div>
+
+        <div class="header-image">
+            <img src="Picture/hr admin.jpg" alt="HR/Admin Department">
+            <div class="header-title">
+                <h1>HR/ADMIN DEPARTMENT</h1>
+            </div>
+        </div>
+
+        <h2 class="section-title">201 FILES / ACTIVE</h2>
+
+        <div class="controls">
+            <div class="action-buttons">
+                <button class="action-button" onclick="showAddModal()">ADD EMPLOYEE</button>
+                <button class="action-button" onclick="removeEmployee()">REMOVE EMPLOYEE</button>
+                <button class="action-button" onclick="showUpdateModal()">UPDATE EMPLOYEE</button>
+            </div>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search employee..." id="searchInput" onkeyup="searchEmployees()">
+                <button class="search-button" onclick="searchEmployees()">SEARCH</button>
+            </div>
+        </div>
+
+        <div class="files-grid" id="filesGrid">
+            <div class="no-records">No employee records found. Click "ADD EMPLOYEE" to create a new record.</div>
+        </div>
+    </div>
+
+    <!-- Add/Update Employee Modal -->
+    <div class="modal" id="employeeModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Add Employee</h2>
+            <form id="employeeForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="employeeId">Employee ID</label>
+                    <input type="text" id="employeeId" required>
+                </div>
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <input type="text" id="department" required>
+                </div>
+                <div class="form-group">
+                    <label for="position">Position</label>
+                    <input type="text" id="position" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let employees = [];
+        let selectedEmployee = null;
+
+        function showAddModal() {
+            document.getElementById('modalTitle').textContent = 'Add Employee';
+            document.getElementById('employeeForm').reset();
+            document.getElementById('employeeModal').style.display = 'block';
+        }
+
+        function showUpdateModal() {
+            if (!selectedEmployee) {
+                alert('Please select an employee to update');
+                return;
+            }
+            document.getElementById('modalTitle').textContent = 'Update Employee';
+            // Fill form with selected employee data
+            const employee = employees.find(e => e.id === selectedEmployee);
+            if (employee) {
+                document.getElementById('firstName').value = employee.firstName;
+                document.getElementById('lastName').value = employee.lastName;
+                document.getElementById('employeeId').value = employee.employeeId;
+                document.getElementById('department').value = employee.department;
+                document.getElementById('position').value = employee.position;
+            }
+            document.getElementById('employeeModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('employeeModal').style.display = 'none';
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const formData = {
+                id: selectedEmployee || Date.now(),
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                employeeId: document.getElementById('employeeId').value,
+                department: document.getElementById('department').value,
+                position: document.getElementById('position').value
+            };
+
+            if (selectedEmployee) {
+                // Update existing employee
+                employees = employees.map(e => e.id === selectedEmployee ? formData : e);
+            } else {
+                // Add new employee
+                employees.push(formData);
+            }
+
+            closeModal();
+            renderEmployees();
+            selectedEmployee = null;
+        }
+
+        function removeEmployee() {
+            if (!selectedEmployee) {
+                alert('Please select an employee to remove');
+                return;
+            }
+            if (confirm('Are you sure you want to remove this employee?')) {
+                employees = employees.filter(e => e.id !== selectedEmployee);
+                selectedEmployee = null;
+                renderEmployees();
+            }
+        }
+
+        function selectEmployee(id) {
+            selectedEmployee = id;
+            document.querySelectorAll('.file-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`[data-id="${id}"]`).classList.add('selected');
+        }
+
+        function searchEmployees() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredEmployees = employees.filter(employee => 
+                `${employee.firstName} ${employee.lastName}`.toLowerCase().includes(searchTerm) ||
+                employee.employeeId.toLowerCase().includes(searchTerm)
+            );
+            renderEmployees(filteredEmployees);
+        }
+
+        function renderEmployees(employeesToRender = employees) {
+            const grid = document.getElementById('filesGrid');
+            if (employeesToRender.length === 0) {
+                grid.innerHTML = '<div class="no-records">No employee records found. Click "ADD EMPLOYEE" to create a new record.</div>';
+                return;
+            }
+
+            grid.innerHTML = employeesToRender.map(employee => `
+                <div class="file-item ${employee.id === selectedEmployee ? 'selected' : ''}" 
+                     onclick="selectEmployee(${employee.id})"
+                     data-id="${employee.id}">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjY2NjYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjIgMTlhMiAyIDAgMCAxLTIgMkg0YTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDVsMiAzaDlhMiAyIDAgMCAxIDIgMnoiLz48L3N2Zz4=" alt="Folder" class="file-icon">
+                    <div class="file-name">${employee.lastName.toUpperCase()}, ${employee.firstName.toUpperCase()}</div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize the grid
+        renderEmployees();
+    </script>
+</body>
+</html>
